@@ -42,6 +42,8 @@ namespace Vaultman
             
             services.AddScoped<AccountsRepository>();
             services.AddScoped<AccountService>();
+            services.AddTransient<KeepsRepository>();
+            services.AddTransient<KeepsService>();
         }
 
         private void ConfigureCors(IServiceCollection services)
