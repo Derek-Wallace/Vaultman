@@ -35,6 +35,8 @@ namespace Vaultman.Services
       {
           throw new Exception("No keep matches that id");
       }
+      keep.Views++;
+      _kr.UpdateCount(keep);
       return keep;
     }
 

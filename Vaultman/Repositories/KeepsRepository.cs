@@ -71,6 +71,19 @@ namespace Vaultman.Repositories
       _db.Execute(sql, data);
       return data;
     }
+
+    public void UpdateCount(Keep update)
+    {
+      var sql = @"
+      UPDATE keeps
+      SET
+      views = @Views,
+      keeps = @Keeps,
+      shares = @Shares
+      WHERE id = @Id;
+      ";
+      _db.Execute(sql, update);
+    }
     public void Delete(int id)
     {
       var sql = "DELETE FROM keeps WHERE id = @id LIMIT 1;";
