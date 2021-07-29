@@ -1,15 +1,40 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo">
-    <h1 class="my-5 bg-dark text-light p-3 rounded d-flex align-items-center">
-      <span class="mx-2 text-white">Vue 3 Starter</span>
-    </h1>
+  <div class="container-fluid">
+    <div class="row" v-show="loaded" v-masonry>
+      <Keep v-for="keep in keeps" :key="keep.id" :keep="keep" v-masonry-tile />
+    </div>
+    <div class="row my-5" v-show="loading">
+      <div class="col-12 d-flex justify-content-center">
+        <p class="home-title">
+          <b>Welcome to Vaultman</b>
+        </p>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="lds-grid" v-show="loading">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      </div>
+    </div>
   </div>
+  <KeepModal />
 </template>
 
 <script>
+import { computed, watchEffect } from '@vue/runtime-core'
+import { AppState } from '../AppState'
+import { keepsService } from '../services/KeepsService'
 export default {
-  name: 'Home'
+  setup() {
+    watchEffect(async() => {
+      await keepsService.GetAllKeeps()
+      keepsService.loading()
+    })
+    return {
+      keeps: computed(() => AppState.allKeeps),
+      loading: computed(() => AppState.loading),
+      loaded: computed(() => AppState.loaded)
+    }
+  }
 }
 </script>
 
@@ -20,6 +45,77 @@ export default {
   > img{
     height: 200px;
     width: 200px;
+  }
+}
+
+.home-title{
+  font-size: 50px;
+}
+.lds-grid {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-grid div {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgb(41, 41, 41);
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: 8px;
+  left: 8px;
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: 8px;
+  left: 32px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: 8px;
+  left: 56px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: 32px;
+  left: 8px;
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: 32px;
+  left: 32px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: 32px;
+  left: 56px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: 56px;
+  left: 8px;
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: 56px;
+  left: 32px;
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: 56px;
+  left: 56px;
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 </style>
